@@ -50,7 +50,7 @@ function handleZipFileUpload ({ file }, res, next) {
                 } else {
                   entry.autodrain()
                 }
-              }).on('error', function (err) { next(err) })
+              }).on('error', function (err) { next(err) }) 
           })
         })
       })

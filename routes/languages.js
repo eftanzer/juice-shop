@@ -4,10 +4,18 @@
  */
 
 const fs = require('fs')
+const RateLimit = require('express-rate-limit')
+const limiter = new RateLimit({
+  windowMs: parseInt(process.env.WINDOW_MS, 10),
+  max: parseInt(process.env.MAX_IP_REQUESTS, 10),
+  delayMs:parseInt(process.env.DELAY_MS, 10),
+  headers: true
+});
 const locales = require('../data/static/locales')
 
 module.exports = function getLanguageList () { // TODO Refactor and extend to also load backend translations from /i18n/*json and calculate joint percentage/gauge
   return (req, res, next) => {
+    res.use(limiter);
     const languages = []
     let count = 0
     let enContent

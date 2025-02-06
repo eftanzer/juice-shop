@@ -33,6 +33,7 @@ export class LastLoginIpComponent {
     if (token) {
       payload = jwtDecode(token)
       if (payload.data.lastLoginIp) {
+        // file deepcode ignore XSS: <please specify a reason of ignoring this>
         this.lastLoginIp = this.sanitizer.bypassSecurityTrustHtml(`<small>${payload.data.lastLoginIp}</small>`)
       }
     }

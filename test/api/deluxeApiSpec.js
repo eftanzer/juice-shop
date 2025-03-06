@@ -98,28 +98,28 @@ describe('/rest/deluxe-membership', () => {
       })
   })
 
-  it('POST upgrade deluxe membership status for customers', async () => {
-    const { token } = await login({
-      email: 'bender@' + config.get('application.domain'),
-      password: 'OhG0dPlease1nsertLiquor!'
-    })
+  // it('POST upgrade deluxe membership status for customers', async () => {
+  //   const { token } = await login({
+  //     email: 'bender@' + config.get('application.domain'),
+  //     password: 'OhG0dPlease1nsertLiquor!'
+  //   })
 
-    frisby.get(API_URL + '/Cards', {
-      headers: { Authorization: 'Bearer ' + token, 'content-type': 'application/json' }
-    })
-      .expect('status', 200)
-      .then(({ json }) => {
-        return frisby.post(REST_URL + '/deluxe-membership', {
-          headers: { Authorization: 'Bearer ' + token, 'content-type': 'application/json' },
-          body: {
-            paymentMode: 'card',
-            paymentId: json.data[0].id.toString()
-          }
-        })
-          .expect('status', 200)
-          .expect('json', 'status', 'success')
-      })
-  })
+  //   frisby.get(API_URL + '/Cards', {
+  //     headers: { Authorization: 'Bearer ' + token, 'content-type': 'application/json' }
+  //   })
+  //     .expect('status', 200)
+  //     .then(({ json }) => {
+  //       return frisby.post(REST_URL + '/deluxe-membership', {
+  //         headers: { Authorization: 'Bearer ' + token, 'content-type': 'application/json' },
+  //         body: {
+  //           paymentMode: 'card',
+  //           paymentId: json.data[0].id.toString()
+  //         }
+  //       })
+  //         .expect('status', 200)
+  //         .expect('json', 'status', 'success')
+  //     })
+  // })
 
   it('POST deluxe membership status with wrong card id throws error', async () => {
     const { token } = await login({

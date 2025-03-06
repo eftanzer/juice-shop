@@ -1,0 +1,1 @@
+failed to set input: output.findings.6.attributes.suppression.details.ignoredBy.email: conflicting values string and null (mismatched types string and null)

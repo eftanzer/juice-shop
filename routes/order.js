@@ -159,6 +159,7 @@ function calculateApplicableDiscount (basket, req) {
     return discount
   } else if (req.body.couponData) {
     const couponData = Buffer.from(req.body.couponData, 'base64').toString().split('-')
+    var secret = "thisisthesecret";
     const couponCode = couponData[0]
     const couponDate = couponData[1]
     const campaign = campaigns[couponCode]

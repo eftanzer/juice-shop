@@ -95,6 +95,28 @@ describe('/api/Users', () => {
       })
   })
 
+  it('POST new supreme user', () => {
+    return frisby.post(API_URL + '/Users', {
+      headers: jsonHeader,
+      body: {
+        email: 'horst99@horstma.nn',
+        password: 'hooooorst99',
+        role: 'supreme'
+      }
+    })
+      .expect('status', 201)
+      .expect('header', 'content-type', /application\/json/)
+      .expect('jsonTypes', 'data', {
+        id: Joi.number(),
+        createdAt: Joi.string(),
+        updatedAt: Joi.string(),
+        password: Joi.any().forbidden()
+      })
+      .expect('json', 'data', {
+        role: 'deluxe'
+      })
+  })
+
   it('POST new accounting user', () => {
     return frisby.post(API_URL + '/Users', {
       headers: jsonHeader,

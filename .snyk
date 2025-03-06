@@ -1,0 +1,5 @@
+ignore:
+  SNYK-JS-BRACES-6838727:
+    - '*':
+        reason: goodReason
+        expires: 2025-12-01TR12:00:00.000Z

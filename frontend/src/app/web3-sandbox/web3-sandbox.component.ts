@@ -154,8 +154,8 @@ contract HelloWorld {
         return
       }
 
-      const provider = new ethers.providers.Web3Provider(window.ethereum)
-      const signer = provider.getSigner()
+      const provider = new ethers.BrowserProvider(window.ethereum)
+      const signer = await provider.getSigner()
 
       const contractBytecode = selectedContract.evm.bytecode.object
       const contractAbi = selectedContract.abi
@@ -165,16 +165,16 @@ contract HelloWorld {
         contractBytecode,
         signer
       )
-      const transactionOptions: ethers.PayableOverrides = {}
+      const transactionOptions: ethers.Overrides = {}
       if (this.commonGweiValue > 0) {
-        transactionOptions.value = ethers.utils.parseUnits(
+        transactionOptions.value = ethers.parseUnits(
           this.commonGweiValue.toString(),
           'gwei'
         )
       }
       const contract = await factory.deploy(transactionOptions)
-      await contract.deployed()
-      this.deployedContractAddress = contract.address
+      await contract.waitForDeployment()
+      this.deployedContractAddress = String(contract.target)
 
       this.contractFunctions = contractAbi
         .filter((item) => item.type === 'function')
@@ -218,8 +218,8 @@ contract HelloWorld {
       const selectedContract =
         this.compiledContracts[this.selectedContractName]
 
-      const provider = new ethers.providers.Web3Provider(window.ethereum)
-      const signer = provider.getSigner()
+      const provider = new ethers.BrowserProvider(window.ethereum)
+      const signer = await provider.getSigner()
       const contract = new ethers.Contract(
         this.deployedContractAddress,
         selectedContract.abi,
@@ -233,14 +233,14 @@ contract HelloWorld {
             return this.parseInputValue(value.trim(), inputType)
           })
           : []
-      const transactionOptions: ethers.PayableOverrides = {}
+      const transactionOptions: ethers.Overrides = {}
       if (this.commonGweiValue > 0) {
-        transactionOptions.value = ethers.utils.parseUnits(
+        transactionOptions.value = ethers.parseUnits(
           this.commonGweiValue.toString(),
           'gwei'
         )
       }
-      const transaction = await contract.functions[func.name](
+      const transaction = await contract.getFunction(func.name)(
         ...inputs,
         transactionOptions
       )
@@ -251,7 +251,7 @@ contract HelloWorld {
         (func.stateMutability === 'view' || func.stateMutability === 'pure')
       ) {
         console.log('hello')
-        const outputValue = transaction[0].toString()
+        const outputValue = (func.outputs.length > 1 ? transaction[0] : transaction).toString()
         const updatedFunc = this.contractFunctions.find(
           (f) => f.name === func.name
         )

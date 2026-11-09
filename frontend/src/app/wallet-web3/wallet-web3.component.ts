@@ -60,13 +60,13 @@ export class WalletWeb3Component implements OnInit {
 
   async depositETH () {
     try {
-      const provider = new ethers.providers.Web3Provider(window.ethereum)
-      const signer = provider.getSigner()
+      const provider = new ethers.BrowserProvider(window.ethereum)
+      const signer = await provider.getSigner()
 
       const contract = new ethers.Contract(BankAddress, web3WalletABI, signer)
       const depositAmount = this.inputAmount.toString()
       const transaction = await contract.ethdeposit(this.metamaskAddress, {
-        value: ethers.utils.parseEther(depositAmount)
+        value: ethers.parseEther(depositAmount)
       })
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const txConfirmation = await transaction.wait()
@@ -78,13 +78,13 @@ export class WalletWeb3Component implements OnInit {
 
   async withdrawETH () {
     try {
-      const provider = new ethers.providers.Web3Provider(window.ethereum)
-      const signer = provider.getSigner()
+      const provider = new ethers.BrowserProvider(window.ethereum)
+      const signer = await provider.getSigner()
 
       const contract = new ethers.Contract(BankAddress, web3WalletABI, signer)
       const withdrawalAmount = this.inputAmount.toString()
       const transaction = await contract.withdraw(
-        ethers.utils.parseEther(withdrawalAmount)
+        ethers.parseEther(withdrawalAmount)
       )
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const txConfirmation = await transaction.wait()
@@ -96,11 +96,11 @@ export class WalletWeb3Component implements OnInit {
 
   async getUserEthBalance () {
     try {
-      const provider = new ethers.providers.Web3Provider(window.ethereum)
-      const signer = provider.getSigner()
+      const provider = new ethers.BrowserProvider(window.ethereum)
+      const signer = await provider.getSigner()
       const contract = new ethers.Contract(BankAddress, web3WalletABI, signer)
       const userBalance = await contract.balanceOf(this.metamaskAddress)
-      const formattedBalance = ethers.utils.formatEther(userBalance)
+      const formattedBalance = ethers.formatEther(userBalance)
       this.walletBalance = formattedBalance
     } catch (error) {
       this.errorMessage = error.message
